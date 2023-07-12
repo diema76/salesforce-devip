@@ -48,9 +48,13 @@ jobs:
                   sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source src/
 
             # Authenticate to org
-            - name: 'Authenticate to Production Org'
+            - name: 'Generate Authenticate to authFile for Org'
+              run: sfdx org:display -u salesforce.devteam@thenewco.it.ip.ipdevb2c  --verbose --json > authFile.json
+
+            # Authenticate to org
+            - name: 'Authenticate to authFile for Org'
              # run: sfdx auth:sfdxurl:store -f ./SFDX_PRODUCTION_URL.txt -s -a production
-              run: sfdx force:auth:web:login -a OrgAlias -r https://test.salesforce.com
+              run: sfdx auth:sfdxurl:store -f authFile.json
 
             #- name: 'Deploy the entire branch to Production org'
             #  run: sfdx force:source:deploy -p src --testlevel RunLocalTests --json
